@@ -48,6 +48,10 @@ head.addEventListener('click', (e) => {
 tableBody.addEventListener('click', (e) => {
   const row = e.target.closest('tr');
 
+  if (!row) {
+    return;
+  }
+
   if (row) {
     const allRows = tableBody.querySelectorAll('tr');
 
@@ -116,6 +120,18 @@ form.addEventListener('submit', (e) => {
   const names = formData.get('name');
   const age = formData.get('age');
   const position = formData.get('position');
+  const salary = formData.get('salary');
+
+  if (!salary || salary <= 0) {
+    pushNotifications(
+      'Title of error message',
+      'Wrong salary! Please enter a correct salary!.',
+      'error',
+    );
+    form.reset();
+
+    return;
+  }
 
   if (!position || position.trim() === '') {
     pushNotifications(
@@ -123,6 +139,7 @@ form.addEventListener('submit', (e) => {
       'Wrong position! Please enter a correct position!.',
       'error',
     );
+    form.reset();
 
     return;
   }
@@ -227,6 +244,7 @@ tableBody.addEventListener('dblclick', (e) => {
   const originaltext = chosenCell.textContent;
 
   input.type = 'text';
+  input.classList.add('cell-input');
   input.value = chosenCell.textContent;
 
   chosenCell.textContent = '';
@@ -235,11 +253,25 @@ tableBody.addEventListener('dblclick', (e) => {
   input.focus();
 
   input.addEventListener('blur', () => {
+    if (!input.value) {
+      chosenCell.textContent = originaltext;
+      input.remove();
+
+      return;
+    }
+
     chosenCell.textContent = input.value;
+    input.remove();
   });
 
   input.addEventListener('keydown', (press) => {
     if (press.key === 'Enter') {
+      if (!input.value) {
+        chosenCell.textContent = originaltext;
+        input.remove();
+
+        return;
+      }
       chosenCell.textContent = input.value;
       input.remove();
     }
