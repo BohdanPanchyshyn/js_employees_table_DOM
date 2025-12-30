@@ -24,11 +24,15 @@ head.addEventListener('click', (e) => {
   const sortedUser = listUsers.sort((a, b) => {
     const one = a.cells[e.target.cellIndex].innerHTML;
     const two = b.cells[e.target.cellIndex].innerHTML;
-    const numA = one.replaceAll(',', '').slice(1);
-    const numB = two.replaceAll(',', '').slice(1);
+    const numA = Number(one.replaceAll(',', '').slice(1));
+    const numB = Number(two.replaceAll(',', '').slice(1));
 
     if (one.includes('$')) {
       return lastIndex !== e.target.cellIndex ? numA - numB : numB - numA;
+    }
+
+    if (e.target.cellIndex === 3) {
+      return lastIndex !== e.target.cellIndex ? one - two : two - one;
     }
 
     return lastIndex !== e.target.cellIndex
